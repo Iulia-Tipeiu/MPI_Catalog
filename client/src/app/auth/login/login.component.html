@@ -1,0 +1,23 @@
+<div class="auth-container">
+    <mat-card>
+      <h2>Login</h2>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" />
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" type="password" />
+        </mat-form-field>
+  
+        <button mat-raised-button color="primary" type="submit">Login</button>
+      </form>
+  
+      <div class="redirect-button">
+        <button mat-button (click)="goToRegister()">Don't have an account? Register</button>
+      </div>
+    </mat-card>
+  </div>
+  
