@@ -15,7 +15,6 @@ CREATE TABLE profiles (
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     phone VARCHAR(20),
-    profile_image VARCHAR(255),
 	address VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
