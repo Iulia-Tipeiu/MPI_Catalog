@@ -28,7 +28,14 @@ export class ProfileComponent implements OnInit {
   isChangingPassword = false;
 
   // Static user info
-  user: { username: string; email: string; role: string } | null = null;
+  user: { 
+    username: string; 
+    email: string;
+    role: string; 
+    firstName: string; 
+    lastName: string; 
+    phone: number, 
+    address: string } | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -59,6 +66,12 @@ export class ProfileComponent implements OnInit {
     const userData = localStorage.getItem('user');
     if (userData) {
       this.user = JSON.parse(userData);
+      this.profileForm.patchValue({
+        first_name: this.user?.firstName ?? '',
+        last_name: this.user?.lastName ?? '',
+        phone: this.user?.phone ?? '',
+        address: this.user?.address ?? '',
+      });
     } else {
       console.error('User data not found. Redirecting to login.');
       this.router.navigate(['/login']);
@@ -96,10 +109,20 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
-    this.profileService.updateProfile(this.profileForm.value).subscribe({
+    const updatedProfile = {
+      firstName: this.profileForm.value.first_name,
+      lastName: this.profileForm.value.last_name,
+      phone: this.profileForm.value.phone,
+      address: this.profileForm.value.address,
+    };
+
+    console.log('Form data to be saved:', updatedProfile);
+
+    this.profileService.updateProfile(updatedProfile).subscribe({
       next: (response: any) => {
         console.log('Profile updated successfully:', response);
         alert('Profile updated successfully.');
+        this.isEditing = false;
       },
       error: (err: any) => {
         console.error('Failed to update profile:', err);
