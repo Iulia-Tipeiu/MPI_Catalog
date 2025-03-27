@@ -12,8 +12,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { AuthService } from '../auth.service';
+import { HttpClientModule } from '@angular/common/http';
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -22,6 +25,7 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule,
     MatCardModule,
     MatButtonModule,
+    HttpClientModule,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
@@ -29,19 +33,30 @@ import { MatInputModule } from '@angular/material/input';
 export class LoginComponent {
   form: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
     this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      username: ['', [Validators.required]],
       password: ['', Validators.required],
     });
   }
 
   onSubmit() {
     if (this.form.valid) {
-      console.log('Login with:', this.form.value);
-      // You can plug in your backend call here
-    }
+      const username = this.form.value.username;
+      const password = this.form.value.password;
+      console.log('Logging in with:', username, password);
+      this.authService.login(username, password).subscribe({
+        next: (user) => {
+          this.router.navigate(['']);
+        },
+        error: (error) => {
+          console.error('Login failed:', error);
+        },
+      });
+    } else {
+      alert('Please enter valid email and password');
   }
+}
 
   goToRegister() {
     this.router.navigate(['/register']);
