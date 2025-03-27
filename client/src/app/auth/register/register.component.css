@@ -1,0 +1,74 @@
+:host {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #f9f9fb;
+    font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  mat-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 2.5rem;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    background-color: #ffffff;
+  }
+  
+  h2 {
+    margin-bottom: 2rem;
+    font-size: 24px;
+    font-weight: 600;
+    color: #2c2c2c;
+    text-align: center;
+  }
+  
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 1.2rem;
+  }
+  
+  input {
+    border-radius: 12px !important;
+  }
+  
+  /* Primary button */
+  button[mat-raised-button] {
+    width: 100%;
+    padding: 0.75rem;
+    font-weight: 500;
+    border-radius: 12px;
+    text-transform: none;
+    font-size: 15px;
+    background-color: #d81b60;
+    color: white;
+    transition: background-color 0.25s ease, transform 0.15s ease;
+    box-shadow: 0 4px 8px rgba(216, 27, 96, 0.2);
+  }
+  
+  button[mat-raised-button]:hover {
+    background-color: #ad1457;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(216, 27, 96, 0.25);
+  }
+  
+  /* Redirect button */
+  .redirect-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+  
+  button[mat-button] {
+    text-transform: none;
+    font-weight: 400;
+    font-size: 14px;
+    color: #666;
+    transition: color 0.2s ease;
+  }
+  
+  button[mat-button]:hover {
+    color: #d81b60;
+  }
+  
