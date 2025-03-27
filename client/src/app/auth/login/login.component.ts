@@ -12,8 +12,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -44,19 +45,29 @@ export class LoginComponent {
     if (this.form.valid) {
       const username = this.form.value.username;
       const password = this.form.value.password;
-      console.log('Logging in with:', username, password);
+
       this.authService.login(username, password).subscribe({
-        next: (user) => {
-          this.router.navigate(['']);
+        next: (response: any) => {
+          console.log('Login successful:', response);
+
+          // Save the token in localStorage
+          localStorage.setItem('token', response.token);
+
+          // Save the user information in localStorage
+          localStorage.setItem('user', JSON.stringify(response.user));          
+
+          // Navigate to the profile page
+          this.router.navigate(['/profile']);
         },
         error: (error) => {
           console.error('Login failed:', error);
+          alert('Invalid username or password.');
         },
       });
     } else {
-      alert('Please enter valid email and password');
+      alert('Please enter valid username and password.');
+    }
   }
-}
 
   goToRegister() {
     this.router.navigate(['/register']);

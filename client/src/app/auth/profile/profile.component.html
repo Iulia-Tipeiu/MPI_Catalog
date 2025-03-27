@@ -3,20 +3,26 @@
     <h2>User Profile</h2>
 
     <!-- Static Info -->
-    <p><strong>Username:</strong> {{ user.username }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>Role:</strong> {{ user.role }}</p>
+    <p><strong>Username:</strong> {{ user?.username }}</p>
+    <p><strong>Email:</strong> {{ user?.email }}</p>
+    <p><strong>Role:</strong> {{ user?.role }}</p>
 
     <!-- Profile Editable Form -->
     <form [formGroup]="profileForm">
       <mat-form-field appearance="fill">
         <mat-label>First Name</mat-label>
         <input matInput formControlName="first_name" [readonly]="!isEditing" />
+        <mat-error *ngIf="profileForm.get('first_name')?.hasError('required')">
+          First Name is required.
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Last Name</mat-label>
         <input matInput formControlName="last_name" [readonly]="!isEditing" />
+        <mat-error *ngIf="profileForm.get('last_name')?.hasError('required')">
+          Last Name is required.
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
