@@ -129,7 +129,6 @@ export const createCourse = async (req, res) => {
   try {
     const { courseName, description } = req.body;
     const teacherId = req.user.id;
-    const userRole = req.user.role;
 
     if (!courseName) {
       return res
