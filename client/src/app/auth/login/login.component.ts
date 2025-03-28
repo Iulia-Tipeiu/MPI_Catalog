@@ -12,8 +12,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { AuthService } from '../../services/auth.service';
+import { HttpClientModule } from '@angular/common/http';
+
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -22,6 +26,7 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule,
     MatCardModule,
     MatButtonModule,
+    HttpClientModule,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
@@ -29,17 +34,38 @@ import { MatInputModule } from '@angular/material/input';
 export class LoginComponent {
   form: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
     this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      username: ['', [Validators.required]],
       password: ['', Validators.required],
     });
   }
 
   onSubmit() {
     if (this.form.valid) {
-      console.log('Login with:', this.form.value);
-      // You can plug in your backend call here
+      const username = this.form.value.username;
+      const password = this.form.value.password;
+
+      this.authService.login(username, password).subscribe({
+        next: (response: any) => {
+          console.log('Login successful:', response);
+
+          // Save the token in localStorage
+          localStorage.setItem('token', response.token);
+
+          // Save the user information in localStorage
+          localStorage.setItem('user', JSON.stringify(response.user));          
+
+          // Navigate to the profile page
+          this.router.navigate(['/profile']);
+        },
+        error: (error) => {
+          console.error('Login failed:', error);
+          alert('Invalid username or password.');
+        },
+      });
+    } else {
+      alert('Please enter valid username and password.');
     }
   }
 
