@@ -45,8 +45,8 @@ export class RegisterComponent {
         email: this.form.get('email')!.value,
         role: this.form.get('role')!.value,
         password: this.form.get('password')!.value,
-      }
-      console.log('Registering user with:', userData);
+      };
+      // console.log('Registering user with:', userData); // Commented out
       this.authService.register(
         userData.username,
         userData.password,
@@ -56,7 +56,7 @@ export class RegisterComponent {
         userData.lastName
       ).subscribe({
         next: (registeredUser) => {
-          console.log('User registered:', registeredUser);
+          // console.log('User registered:', registeredUser); // Commented out
           this.router.navigate(['/login']);
         },
         error: (error) => {

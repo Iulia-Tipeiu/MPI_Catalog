@@ -81,7 +81,7 @@ export class ProfileComponent implements OnInit {
   loadProfile() {
     this.profileService.getProfile().subscribe({
       next: (profile: any) => {
-        console.log('Profile data received:', profile);
+        // console.log('Profile data received:', profile); // Commented out
         this.profileForm.patchValue({
           first_name: profile.firstName,
           last_name: profile.lastName,
@@ -116,11 +116,11 @@ export class ProfileComponent implements OnInit {
       address: this.profileForm.value.address,
     };
 
-    console.log('Form data to be saved:', updatedProfile);
+    // console.log('Form data to be saved:', updatedProfile); // Commented out
 
     this.profileService.updateProfile(updatedProfile).subscribe({
       next: (response: any) => {
-        console.log('Profile updated successfully:', response);
+        // console.log('Profile updated successfully:', response); // Commented out
         alert('Profile updated successfully.');
         this.isEditing = false;
       },
