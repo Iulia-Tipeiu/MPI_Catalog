@@ -325,3 +325,125 @@ export const unenrollStudent = async (req, res) => {
     });
   }
 };
+
+export const getUnenrolledStudents = async (req, res) => {
+  try {
+    const courseId = req.params.courseId;
+    const teacherId = req.user.id;
+
+    const courseCheck = await pool.query(
+      "SELECT * FROM courses WHERE id = $1 AND teacher_id = $2",
+      [courseId, teacherId]
+    );
+
+    if (courseCheck.rows.length === 0) {
+      return res.status(403).json({
+        message: "Nu aveți permisiunea de a accesa acest curs.",
+      });
+    }
+
+    const unenrolledStudentsQuery = `
+      SELECT u.id, u.username, u.email, p.first_name, p.last_name
+      FROM users u
+      JOIN profiles p ON u.id = p.user_id
+      WHERE u.role = 'student'
+      AND u.id NOT IN (
+        SELECT student_id FROM course_enrollments WHERE course_id = $1
+      )
+      ORDER BY p.last_name, p.first_name
+    `;
+
+    const unenrolledStudents = await pool.query(unenrolledStudentsQuery, [
+      courseId,
+    ]);
+
+    res.status(200).json({
+      unenrolledStudents: unenrolledStudents.rows,
+    });
+  } catch (error) {
+    console.error("Eroare la obținerea studenților neînscriși:", error);
+    res.status(500).json({
+      message: "Eroare la obținerea studenților neînscriși. Încercați din nou.",
+    });
+  }
+};
+
+export const bulkEnrollStudents = async (req, res) => {
+  try {
+    const courseId = req.params.courseId;
+    const { studentIds } = req.body;
+    const teacherId = req.user.id;
+
+    if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0) {
+      return res.status(400).json({
+        message: "Lista de ID-uri ale studenților este obligatorie.",
+      });
+    }
+
+    const courseCheck = await pool.query(
+      "SELECT * FROM courses WHERE id = $1 AND teacher_id = $2",
+      [courseId, teacherId]
+    );
+
+    if (courseCheck.rows.length === 0) {
+      return res.status(403).json({
+        message: "Nu aveți permisiunea de a modifica acest curs.",
+      });
+    }
+
+    const studentCheckQuery = `
+      SELECT id FROM users 
+      WHERE id = ANY($1::int[]) AND role = 'student'
+    `;
+
+    const existingStudents = await pool.query(studentCheckQuery, [studentIds]);
+
+    if (existingStudents.rows.length !== studentIds.length) {
+      return res.status(400).json({
+        message:
+          "Unul sau mai mulți studenți nu există sau nu au rolul de student.",
+      });
+    }
+
+    const enrollmentCheckQuery = `
+      SELECT student_id FROM course_enrollments 
+      WHERE course_id = $1 AND student_id = ANY($2::int[])
+    `;
+
+    const existingEnrollments = await pool.query(enrollmentCheckQuery, [
+      courseId,
+      studentIds,
+    ]);
+
+    const alreadyEnrolledIds = existingEnrollments.rows.map(
+      (row) => row.student_id
+    );
+
+    const newStudentIds = studentIds.filter(
+      (id) => !alreadyEnrolledIds.includes(id)
+    );
+
+    if (newStudentIds.length === 0) {
+      return res.status(400).json({
+        message: "Toți studenții selectați sunt deja înscriși la acest curs.",
+      });
+    }
+
+    const values = newStudentIds.map((id) => `(${courseId}, ${id})`).join(", ");
+
+    await pool.query(
+      `INSERT INTO course_enrollments (course_id, student_id) VALUES ${values}`
+    );
+
+    res.status(201).json({
+      message: `${newStudentIds.length} studenți au fost înscriși cu succes.`,
+      enrolledCount: newStudentIds.length,
+      alreadyEnrolledCount: alreadyEnrolledIds.length,
+    });
+  } catch (error) {
+    console.error("Eroare la înscrierea în masă a studenților:", error);
+    res.status(500).json({
+      message: "Eroare la înscrierea studenților. Încercați din nou.",
+    });
+  }
+};
