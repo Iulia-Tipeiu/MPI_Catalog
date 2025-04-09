@@ -7,6 +7,8 @@ import {
   deleteCourse,
   enrollStudent,
   unenrollStudent,
+  getUnenrolledStudents,
+  bulkEnrollStudents,
 } from "../controller/courseController.js";
 import { auth } from "../middleware/auth.js";
 import { isTeacher } from "../middleware/roleMiddleware.js";
@@ -24,5 +26,8 @@ router.delete("/:id", isTeacher, deleteCourse);
 
 router.post("/:courseId/enroll", isTeacher, enrollStudent);
 router.delete("/:courseId/students/:studentId", isTeacher, unenrollStudent);
+
+router.get("/:courseId/unenrolled-students", isTeacher, getUnenrolledStudents);
+router.post("/:courseId/bulk-enroll", isTeacher, bulkEnrollStudents);
 
 export default router;
