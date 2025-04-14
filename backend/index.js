@@ -6,7 +6,7 @@ import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
 import assignmentRoutes from "./routes/assignmentRoutes.js";
-import gradeRoutes from "./routes/gradeRoutes.js";
+import gradesRoutes from "./routes/gradesRoutes.js";
 import rateLimit from "express-rate-limit";
 import cookieParser from "cookie-parser";
 import session from "express-session";
@@ -66,7 +66,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/course", courseRoutes);
 app.use("/api", assignmentRoutes);
-app.use("/api", gradeRoutes);
+app.use("/api", gradesRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

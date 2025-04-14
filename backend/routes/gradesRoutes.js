@@ -5,7 +5,7 @@ import {
   getStudentGradesByCourse,
   getStudentGradeHistory,
   getStudentGradeStatistics,
-} from "../controller/gradeController.js";
+} from "../controller/gradesController.js";
 import { auth } from "../middleware/auth.js";
 import { isStudent } from "../middleware/roleMiddleware.js";
 
