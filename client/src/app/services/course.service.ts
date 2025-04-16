@@ -84,4 +84,16 @@ export class CourseService {
   navigateToCourse(courseId: string): void {
     this.router.navigate(['/course', courseId]);
   }
+
+  getUnenrolledStudents(courseId: string): Observable<{unenrolledStudents: any[]}> {
+    return this.http.get<{unenrolledStudents: any[]}>(`${this.apiUrl}/course/${courseId}/unenrolled-students`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  bulkEnrollStudents(courseId: string, studentIds: string[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/course/${courseId}/bulk-enroll`, { studentIds }, {
+      headers: this.getAuthHeaders()
+    });
+  }
 }

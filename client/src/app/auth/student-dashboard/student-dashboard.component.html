@@ -1,40 +1,49 @@
-<div class="dashboard-container">
-  <mat-card>
-    <h2>Student Dashboard</h2>
+<div class="student-dashboard">
+  <h1>Student Dashboard</h1>
 
-    <section>
-      <h3>Your Courses</h3>
-      <mat-list>
-        <mat-list-item *ngFor="let course of courses">
-          {{ course.course_name }}
-        </mat-list-item>
-      </mat-list>
-    </section>
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading your courses...</p>
+  </div>
 
-    <mat-divider></mat-divider>
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="loadStudentCourses()">
+      Try Again
+    </button>
+  </div>
 
-    <section>
-      <h3>Your Assignments</h3>
-      <mat-list>
-        <mat-list-item *ngFor="let assignment of assignments">
-          {{ assignment.title }} ({{ assignment.course_name }})
-        </mat-list-item>
-      </mat-list>
-    </section>
+  <div *ngIf="!loading && !error">
+    <mat-card class="courses-card">
+      <mat-card-header>
+        <mat-card-title>My Enrolled Courses</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list *ngIf="courses.length > 0">
+          <mat-list-item
+            *ngFor="let course of courses"
+            (click)="goToCourse(course.id)"
+            class="course-item"
+          >
+            <div class="course-name">{{ course.course_name }}</div>
+            <div class="course-teacher">
+              <small
+                >Teacher: {{ course.teacher_first_name }}
+                {{ course.teacher_last_name }}</small
+              >
+            </div>
+          </mat-list-item>
+        </mat-list>
+        <p *ngIf="courses.length === 0" class="no-data-message">
+          You are not enrolled in any courses yet.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
 
-    <mat-divider></mat-divider>
-
-    <section>
-      <h3>Your Grades</h3>
-      <mat-list>
-        <mat-list-item *ngFor="let grade of grades">
-          Assignment ID: {{ grade.assignment_id }} – Score: {{ grade.score }}
-        </mat-list-item>
-      </mat-list>
-    </section>
-
-    <div class="redirect-button">
-      <button mat-button (click)="goToProfile()">Go to Profile</button>
-    </div>
-  </mat-card>
+  <div class="action-buttons">
+    <button mat-raised-button color="primary" (click)="goToProfile()">
+      My Profile
+    </button>
+  </div>
 </div>

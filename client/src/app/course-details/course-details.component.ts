@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -10,9 +9,11 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { CourseService } from '../services/course.service';
+import { AddStudentsDialogComponent } from '../add-students-dialog/add-students-dialog.component';
 
 @Component({
   selector: 'app-course-details',
@@ -44,7 +45,8 @@ export class CourseDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private courseService: CourseService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -99,7 +101,19 @@ export class CourseDetailsComponent implements OnInit {
 
   // For teachers: navigate to add students page
   addStudents(): void {
-    this.router.navigate(['/course', this.courseId, 'add-students']);
+    const dialogRef = this.dialog.open(AddStudentsDialogComponent, {
+      width: '600px',
+      data: { courseId: this.courseId }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.success) {
+        this.snackBar.open(`Successfully enrolled ${result.count} student(s)`, 'Close', {
+          duration: 3000
+        });
+        this.loadCourseDetails(); // Refresh the course details to show new students
+      }
+    });
   }
 
   // For teachers: navigate to create assignment page

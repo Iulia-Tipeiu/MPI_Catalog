@@ -1,0 +1,49 @@
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+  }
+  
+  .error-message {
+    color: #f44336;
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  .search-container {
+    margin-bottom: 15px;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  .students-list {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  .student-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .student-username {
+    color: #666;
+    font-size: 0.9rem;
+    margin-left: 8px;
+  }
+  
+  .selected-count {
+    margin-right: auto;
+    color: #666;
+    font-size: 0.9rem;
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+  }

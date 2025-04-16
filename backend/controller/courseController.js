@@ -369,81 +369,67 @@ export const getUnenrolledStudents = async (req, res) => {
 };
 
 export const bulkEnrollStudents = async (req, res) => {
+  const client = await pool.connect();
+  
   try {
     const courseId = req.params.courseId;
     const { studentIds } = req.body;
-    const teacherId = req.user.id;
-
+    
+    console.log("Course ID:", courseId);
+    console.log("Student IDs:", studentIds);
+    
     if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0) {
-      return res.status(400).json({
-        message: "Lista de ID-uri ale studenților este obligatorie.",
-      });
+      return res.status(400).json({ message: "Lista de ID-uri ale studenților este obligatorie." });
     }
 
-    const courseCheck = await pool.query(
-      "SELECT * FROM courses WHERE id = $1 AND teacher_id = $2",
-      [courseId, teacherId]
+    await client.query('BEGIN');
+    
+    const existingEnrollments = await client.query(
+      `SELECT student_id::text FROM course_enrollments WHERE course_id = $1`,
+      [courseId]
     );
-
-    if (courseCheck.rows.length === 0) {
-      return res.status(403).json({
-        message: "Nu aveți permisiunea de a modifica acest curs.",
-      });
-    }
-
-    const studentCheckQuery = `
-      SELECT id FROM users 
-      WHERE id = ANY($1::int[]) AND role = 'student'
-    `;
-
-    const existingStudents = await pool.query(studentCheckQuery, [studentIds]);
-
-    if (existingStudents.rows.length !== studentIds.length) {
-      return res.status(400).json({
-        message:
-          "Unul sau mai mulți studenți nu există sau nu au rolul de student.",
-      });
-    }
-
-    const enrollmentCheckQuery = `
-      SELECT student_id FROM course_enrollments 
-      WHERE course_id = $1 AND student_id = ANY($2::int[])
-    `;
-
-    const existingEnrollments = await pool.query(enrollmentCheckQuery, [
-      courseId,
-      studentIds,
-    ]);
-
-    const alreadyEnrolledIds = existingEnrollments.rows.map(
-      (row) => row.student_id
-    );
-
-    const newStudentIds = studentIds.filter(
-      (id) => !alreadyEnrolledIds.includes(id)
-    );
-
+    
+    const alreadyEnrolledIds = existingEnrollments.rows.map(row => row.student_id);
+    console.log("Already enrolled:", alreadyEnrolledIds);
+    
+    const newStudentIds = studentIds.filter(id => !alreadyEnrolledIds.includes(id));
+    console.log("New students to enroll:", newStudentIds);
+    
     if (newStudentIds.length === 0) {
-      return res.status(400).json({
-        message: "Toți studenții selectați sunt deja înscriși la acest curs.",
-      });
+      await client.query('ROLLBACK');
+      return res.status(400).json({ message: "Toți studenții selectați sunt deja înscriși la acest curs." });
     }
-
-    const values = newStudentIds.map((id) => `(${courseId}, ${id})`).join(", ");
-
-    await pool.query(
-      `INSERT INTO course_enrollments (course_id, student_id) VALUES ${values}`
-    );
-
-    res.status(201).json({
-      message: `${newStudentIds.length} studenți au fost înscriși cu succes.`,
-      enrolledCount: newStudentIds.length,
-      alreadyEnrolledCount: alreadyEnrolledIds.length,
+    
+    let successCount = 0;
+    for (const studentId of newStudentIds) {
+      try {
+       
+        const query = `
+          INSERT INTO course_enrollments (course_id, student_id) 
+          VALUES ($1, $2::text::uuid)
+        `;
+        
+        await client.query(query, [courseId, studentId]);
+        successCount++;
+      } catch (insertError) {
+        console.error(`Failed to enroll student ${studentId}:`, insertError);
+      }
+    }
+    
+    await client.query('COMMIT');
+    
+    return res.status(201).json({
+      message: `${successCount} studenți au fost înscriși cu succes.`,
+      enrolledCount: successCount
     });
   } catch (error) {
+    await client.query('ROLLBACK');
     console.error("Eroare la înscrierea în masă a studenților:", error);
-    res.status(500).json({
+    return res.status(500).json({
       message: "Eroare la înscrierea studenților. Încercați din nou.",
+      errorDetail: error.message
     });
+  } finally {
+    client.release();
   }
 };
