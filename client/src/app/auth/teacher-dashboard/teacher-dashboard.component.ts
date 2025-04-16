@@ -1,10 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
+import { CourseService, Course } from '../../services/course.service';
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-teacher-dashboard',
@@ -15,32 +18,46 @@ import { Router } from '@angular/router';
     MatListModule,
     MatDividerModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './teacher-dashboard.component.html',
   styleUrls: ['./teacher-dashboard.component.css'],
 })
-export class TeacherDashboardComponent {
-  constructor(private router: Router) {}
+export class TeacherDashboardComponent implements OnInit {
+  courses: Course[] = [];
+  loading = true;
+  error = '';
 
-  courses = [
-    { id: 'c1', course_name: 'Computer Science 101' },
-    { id: 'c2', course_name: 'Digital Art Fundamentals' },
-  ];
+  constructor(private router: Router, private courseService: CourseService) {}
 
-  assignments = [
-    { title: 'Intro to Python', course_name: 'Computer Science 101' },
-    { title: 'Digital Self-Portrait', course_name: 'Digital Art Fundamentals' },
-  ];
+  ngOnInit(): void {
+    this.loading = true;
+    this.loadTeacherData();
+  }
 
-  enrollments = [
-    { course_name: 'Computer Science 101', students: ['Alice', 'Bob'] },
-    { course_name: 'Digital Art Fundamentals', students: ['Cara', 'Dan'] },
-  ];
+  loadTeacherData(): void {
+    this.courseService.getAllCourses().pipe(
+      catchError(error => {
+        this.error = 'Failed to load courses. Please try again later.';
+        console.error('Error fetching courses:', error);
+        this.loading = false;
+        return of({ courses: [] });
+      })
+    ).subscribe(response => {
+      this.courses = response.courses;
+      this.loading = false;
+    });
+  }
 
   goToCourse(courseId: string) {
-    console.log('Navigate to course:', courseId);
+    this.router.navigate(['/course', courseId]);
   }
+  
   goToProfile() {
     this.router.navigate(['/profile']);
+  }
+
+  createNewCourse() {
+    this.router.navigate(['/create-course']);
   }
 }

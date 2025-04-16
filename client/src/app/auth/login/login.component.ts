@@ -56,8 +56,13 @@ export class LoginComponent {
           // Save the user information in localStorage
           localStorage.setItem('user', JSON.stringify(response.user));          
 
-          // Navigate to the profile page
-          this.router.navigate(['/profile']);
+          const userRole = response.user.role;
+          if(userRole === 'teacher' || userRole === 'student') {
+            this.router.navigate([`/${userRole}`]);
+          } else {
+            alert('Invalid user role. Please contact support.');
+          }
+          
         },
         error: (error) => {
           console.error('Login failed:', error);

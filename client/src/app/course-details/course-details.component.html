@@ -1,0 +1,116 @@
+<div class="course-details-container">
+    <!-- Loading indicator -->
+    <div *ngIf="loading" class="loading-spinner">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading course details...</p>
+    </div>
+  
+    <!-- Error message -->
+    <div *ngIf="error" class="error-message">
+      <p>{{ error }}</p>
+      <button mat-raised-button color="primary" (click)="loadCourseDetails()">Try Again</button>
+    </div>
+  
+    <!-- Course details content -->
+    <div *ngIf="!loading && !error && course">
+      <!-- Course header -->
+      <div class="course-header">
+        <button mat-icon-button (click)="goBack()" class="back-button">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h1>{{ course.course_name }}</h1>
+      </div>
+  
+      <!-- Tabs for different sections -->
+      <mat-tab-group animationDuration="300ms">
+        <!-- Overview tab -->
+        <mat-tab label="Overview">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-content>
+                <h2>Course Description</h2>
+                <p class="course-description">{{ course.description || 'No description available.' }}</p>
+                
+                <mat-divider></mat-divider>
+                
+                <div class="course-meta">
+                  <p><strong>Teacher:</strong> {{ course.teacher_first_name }} {{ course.teacher_last_name }}</p>
+                  <p><strong>Students Enrolled:</strong> {{ students.length }}</p>
+                  <p><strong>Total Assignments:</strong> {{ assignments.length }}</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+  
+        <!-- Students tab -->
+        <mat-tab label="Enrolled Students">
+          <div class="tab-content">
+            <div class="tab-header">
+              <h2>Students ({{ students.length }})</h2>
+              <button *ngIf="currentUserRole === 'teacher'" mat-raised-button color="primary" (click)="addStudents()">
+                <mat-icon>person_add</mat-icon> Add Students
+              </button>
+            </div>
+  
+            <mat-card>
+              <mat-card-content>
+                <div *ngIf="students.length === 0" class="empty-state">
+                  <p>No students enrolled in this course yet.</p>
+                </div>
+  
+                <mat-list *ngIf="students.length > 0">
+                  <mat-list-item *ngFor="let student of students">
+                    <div class="student-list-item">
+                      <div class="student-info">
+                        <h3>{{ student.first_name }} {{ student.last_name }}</h3>
+                        <p class="student-username">{{ student.username }}</p>
+                      </div>
+                      <div *ngIf="currentUserRole === 'teacher'" class="student-actions">
+                        <button mat-icon-button color="warn" (click)="removeStudent(student.id)" matTooltip="Remove student">
+                          <mat-icon>remove_circle_outline</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                    <mat-divider></mat-divider>
+                  </mat-list-item>
+                </mat-list>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+  
+        <!-- Assignments tab (especially for teachers) -->
+        <mat-tab label="Assignments" *ngIf="currentUserRole === 'teacher'">
+          <div class="tab-content">
+            <div class="tab-header">
+              <h2>Assignments ({{ assignments.length }})</h2>
+              <button mat-raised-button color="primary" (click)="createAssignment()">
+                <mat-icon>add</mat-icon> Create Assignment
+              </button>
+            </div>
+  
+            <mat-card>
+              <mat-card-content>
+                <div *ngIf="assignments.length === 0" class="empty-state">
+                  <p>No assignments created for this course yet.</p>
+                </div>
+  
+                <mat-list *ngIf="assignments.length > 0">
+                  <mat-list-item *ngFor="let assignment of assignments">
+                    <div class="assignment-list-item">
+                      <div class="assignment-info">
+                        <h3>{{ assignment.title }}</h3>
+                        <p>Max Score: {{ assignment.max_score }}</p>
+                      </div>
+                    </div>
+                    <mat-divider></mat-divider>
+                  </mat-list-item>
+                </mat-list>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
