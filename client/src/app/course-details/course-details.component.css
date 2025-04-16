@@ -1,126 +1,181 @@
 .course-details-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-  }
-  
-  .loading-spinner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 200px;
-  }
-  
-  .error-message {
-    text-align: center;
-    color: #f44336;
-    margin-top: 2rem;
-  }
-  
-  .course-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 2rem;
-    position: relative;
-  }
-  
-  .back-button {
-    margin-right: 1rem;
-  }
-  
-  h1 {
-    font-size: 2rem;
-    font-weight: 500;
-    margin: 0;
-    flex-grow: 1;
-  }
-  
-  .tab-content {
-    padding: 1.5rem 0;
-  }
-  
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+}
+
+.error-message {
+  text-align: center;
+  color: #f44336;
+  margin-top: 2rem;
+}
+
+.course-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.back-button {
+  margin-right: 1rem;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 500;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.tab-content {
+  padding: 1.5rem 0;
+}
+
+.tab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0 0 1rem 0;
+  color: #333;
+}
+
+.course-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  color: #555;
+}
+
+.course-meta {
+  margin-top: 1rem;
+  color: #666;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.student-list-item,
+.assignment-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 0;
+}
+
+.student-info,
+.assignment-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.student-username {
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+/* Make sure the mat-list-item has enough height */
+mat-list-item {
+  min-height: 64px !important;
+}
+
+mat-divider {
+  margin: 1rem 0;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
   .tab-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-  
-  h2 {
-    font-size: 1.5rem;
-    font-weight: 500;
-    margin: 0 0 1rem 0;
-    color: #333;
-  }
-  
-  .course-description {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 2rem;
-    color: #555;
-  }
-  
-  .course-meta {
-    margin-top: 1rem;
-    color: #666;
-  }
-  
-  .empty-state {
-    text-align: center;
-    padding: 2rem;
-    color: #666;
-  }
-  
-  .student-list-item, .assignment-list-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 0.5rem 0;
-  }
-  
-  .student-info, .assignment-info {
-    display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
-  
-  .student-username {
-    color: #666;
-    font-size: 0.9rem;
-    margin-top: 0.25rem;
+
+  .course-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  /* Make sure the mat-list-item has enough height */
-  mat-list-item {
-    min-height: 64px !important;
+
+  .back-button {
+    position: absolute;
+    top: 0;
+    left: 0;
   }
-  
-  mat-divider {
-    margin: 1rem 0;
+
+  h1 {
+    margin-top: 2rem;
+    margin-left: 2rem;
   }
-  
-  /* Responsive styles */
-  @media (max-width: 768px) {
-    .tab-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1rem;
-    }
-    
-    .course-header {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    
-    .back-button {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-    
-    h1 {
-      margin-top: 2rem;
-      margin-left: 2rem;
-    }
-  }
+}
+
+/* Add these styles to the end of the existing CSS file */
+
+.grade-info {
+  margin-left: auto;
+  text-align: right;
+  min-width: 150px;
+}
+
+.grade {
+  font-weight: 500;
+  color: #333;
+}
+
+.percentage {
+  color: #1976d2;
+}
+
+.not-graded {
+  color: #757575;
+  font-style: italic;
+}
+
+.comment {
+  color: #616161;
+  font-size: 0.9rem;
+  max-width: 300px;
+  white-space: normal;
+}
+
+.average-container {
+  margin-top: 2rem;
+  padding-top: 1rem;
+}
+
+.student-average {
+  text-align: right;
+  margin: 1rem 0;
+}
+
+.student-average h3 {
+  color: #1976d2;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.assignment-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 0;
+}

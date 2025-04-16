@@ -36,64 +36,93 @@ export interface Enrollment {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CourseService {
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) {}
 
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
   }
 
-  getAllCourses(): Observable<{courses: Course[]}> {
-    return this.http.get<{courses: Course[]}>(`${this.apiUrl}/course`, {
-    headers: this.getAuthHeaders()
+  getAllCourses(): Observable<{ courses: Course[] }> {
+    return this.http.get<{ courses: Course[] }>(`${this.apiUrl}/course`, {
+      headers: this.getAuthHeaders(),
     });
   }
 
-  getCourseById(id: string): Observable<{course: Course, students: Student[], assignments: Assignment[]}> {
-    return this.http.get<{course: Course, students: Student[], assignments: Assignment[]}>(`${this.apiUrl}/course/${id}`, {
-      headers: this.getAuthHeaders()
+  getCourseById(
+    id: string
+  ): Observable<{
+    course: Course;
+    students: Student[];
+    assignments: Assignment[];
+  }> {
+    return this.http.get<{
+      course: Course;
+      students: Student[];
+      assignments: Assignment[];
+    }>(`${this.apiUrl}/course/${id}`, {
+      headers: this.getAuthHeaders(),
     });
   }
 
-  getAssignments(): Observable<{assignments: Assignment[]}> {
-    return this.http.get<{assignments: Assignment[]}>(`${this.apiUrl}/assignments`, {
-    headers: this.getAuthHeaders()
-    });
+  getAssignments(): Observable<{ assignments: Assignment[] }> {
+    return this.http.get<{ assignments: Assignment[] }>(
+      `${this.apiUrl}/assignments`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
   }
 
   createCourse(courseData: any): Observable<any> {
-  return this.http.post<any>(`${this.apiUrl}/course`, courseData, {
-    headers: this.getAuthHeaders()
-  });
-}
+    return this.http.post<any>(`${this.apiUrl}/course`, courseData, {
+      headers: this.getAuthHeaders(),
+    });
+  }
 
   unenrollStudent(courseId: string, studentId: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/course/${courseId}/students/${studentId}`, {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.delete<any>(
+      `${this.apiUrl}/course/${courseId}/students/${studentId}`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
   }
 
   navigateToCourse(courseId: string): void {
     this.router.navigate(['/course', courseId]);
   }
 
-  getUnenrolledStudents(courseId: string): Observable<{unenrolledStudents: any[]}> {
-    return this.http.get<{unenrolledStudents: any[]}>(`${this.apiUrl}/course/${courseId}/unenrolled-students`, {
-      headers: this.getAuthHeaders()
-    });
+  getUnenrolledStudents(
+    courseId: string
+  ): Observable<{ unenrolledStudents: any[] }> {
+    return this.http.get<{ unenrolledStudents: any[] }>(
+      `${this.apiUrl}/course/${courseId}/unenrolled-students`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
   }
 
   bulkEnrollStudents(courseId: string, studentIds: string[]): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/course/${courseId}/bulk-enroll`, { studentIds }, {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.post<any>(
+      `${this.apiUrl}/course/${courseId}/bulk-enroll`,
+      { studentIds },
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
+
+  getStudentGradesByCourse(courseId: string) {
+    return this.http.get<any>(`${this.apiUrl}/grades/courses/${courseId}`);
   }
 }
