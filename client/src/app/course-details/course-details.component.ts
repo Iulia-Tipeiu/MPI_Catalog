@@ -14,6 +14,7 @@ import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { CourseService } from '../services/course.service';
 import { AddStudentsDialogComponent } from '../add-students-dialog/add-students-dialog.component';
+import { AddAssignmentDialogComponent } from '../add-assignment-dialog/add-assignment-dialog.component';
 
 @Component({
   selector: 'app-course-details',
@@ -175,7 +176,19 @@ export class CourseDetailsComponent implements OnInit {
 
   // For teachers: navigate to create assignment page
   createAssignment(): void {
-    this.router.navigate(['/course', this.courseId, 'create-assignment']);
+    const dialogRef = this.dialog.open(AddAssignmentDialogComponent, {
+      width: '600px',
+      data: { courseId: this.courseId }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.success) {
+        this.snackBar.open('Assignment created successfully!', 'Close', {
+          duration: 3000
+        });
+        this.loadCourseDetails(); // Refresh the course details to show the new assignment
+      }
+    });
   }
 
   // For teachers: remove a student from the course

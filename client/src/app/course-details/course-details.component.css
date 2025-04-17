@@ -87,6 +87,10 @@ h2 {
   flex-direction: column;
 }
 
+.assignment-info {
+  flex: 1;
+}
+
 .student-username {
   color: #666;
   font-size: 0.9rem;
@@ -178,4 +182,23 @@ mat-divider {
   align-items: center;
   width: 100%;
   padding: 1rem 0;
+}
+
+/* Add these new styles */
+
+.title-score-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.max-score-badge {
+  background-color: #2e2e2e;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
 }

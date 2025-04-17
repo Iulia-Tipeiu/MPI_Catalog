@@ -1,0 +1,36 @@
+.full-width {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  
+  .loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+  }
+  
+  .error-message {
+    color: #f44336;
+    margin-top: 16px;
+    font-size: 14px;
+  }
+  
+  .score-field {
+    margin-bottom: 20px;
+  }
+  
+  mat-dialog-content {
+    min-width: 400px;
+    max-width: 600px;
+  }
+  
+  mat-dialog-actions {
+    padding-top: 16px;
+    margin-bottom: 8px;
+  }
+  
+  textarea {
+    min-height: 100px;
+    resize: vertical;
+  }

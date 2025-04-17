@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>Add New Assignment</h2>
+
+<form [formGroup]="assignmentForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div *ngIf="loading" class="loading-spinner">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Creating assignment...</p>
+    </div>
+    
+    <div *ngIf="!loading">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title">
+        <mat-error *ngIf="hasError('title', 'required')">
+          Title is required
+        </mat-error>
+        <mat-error *ngIf="hasError('title', 'maxlength')">
+          Title cannot exceed 100 characters
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="4"></textarea>
+        <mat-error *ngIf="hasError('description', 'maxlength')">
+          Description cannot exceed 500 characters
+        </mat-error>
+      </mat-form-field>
+
+      <div class="score-field">
+        <mat-label>Maximum Score: {{ assignmentForm.get('maxScore')?.value }}</mat-label>
+        <mat-slider min="1" max="100" step="1" class="full-width">
+          <input matSliderThumb formControlName="maxScore">
+        </mat-slider>
+      </div>
+
+      <div *ngIf="error" class="error-message">
+        {{ error }}
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" [disabled]="loading" (click)="cancel()">Cancel</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="loading">
+      Create Assignment
+    </button>
+  </mat-dialog-actions>
+</form>
