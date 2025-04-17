@@ -8,7 +8,11 @@
 
   <div *ngIf="error" class="error-message">
     <p>{{ error }}</p>
-    <button mat-raised-button color="primary" (click)="loadStudentCourses()">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="loadStudentCoursesAndGrades()"
+    >
       Try Again
     </button>
   </div>
@@ -25,12 +29,42 @@
             (click)="goToCourse(course.id)"
             class="course-item"
           >
-            <div class="course-name">{{ course.course_name }}</div>
-            <div class="course-teacher">
-              <small
-                >Teacher: {{ course.teacher_first_name }}
-                {{ course.teacher_last_name }}</small
+            <div class="course-info">
+              <div class="course-name">{{ course.course_name }}</div>
+              <div class="course-teacher">
+                <small>
+                  Teacher: {{ course.teacher_first_name }}
+                  {{ course.teacher_last_name }}
+                </small>
+              </div>
+            </div>
+            <div
+              class="grade-container"
+              [matTooltip]="getGradeLabel(courseGrades[course.id])"
+            >
+              <div
+                class="grade-circle"
+                [ngStyle]="{
+                  'background-color': getGradeColor(courseGrades[course.id])
+                }"
               >
+                <ng-container
+                  *ngIf="
+                    courseGrades[course.id] !== null &&
+                    courseGrades[course.id] !== undefined
+                  "
+                >
+                  {{ courseGrades[course.id] | number : "1.0-0" }}%
+                </ng-container>
+                <ng-container
+                  *ngIf="
+                    courseGrades[course.id] === null ||
+                    courseGrades[course.id] === undefined
+                  "
+                >
+                  <mat-icon>remove</mat-icon>
+                </ng-container>
+              </div>
             </div>
           </mat-list-item>
         </mat-list>

@@ -32,39 +32,45 @@ export interface Course {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GradesService {
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
   }
 
   // Get all grades for all courses
-  getAllGrades(): Observable<{courses: Course[], overallStats: any}> {
-    return this.http.get<{courses: Course[], overallStats: any}>(`${this.apiUrl}/grades`, {
-      headers: this.getAuthHeaders()
-    });
+  getAllGrades(): Observable<{ courses: Course[]; overallStats: any }> {
+    return this.http.get<{ courses: Course[]; overallStats: any }>(
+      `${this.apiUrl}/grades`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
   }
 
   // Get grade history
-  getGradeHistory(): Observable<{grades: any[]}> {
-    return this.http.get<{grades: any[]}>(`${this.apiUrl}/grades/history`, {
-      headers: this.getAuthHeaders()
+  getGradeHistory(): Observable<{ grades: any[] }> {
+    return this.http.get<{ grades: any[] }>(`${this.apiUrl}/grades/history`, {
+      headers: this.getAuthHeaders(),
     });
   }
 
   // Get grade statistics
-  getGradeStatistics(): Observable<{statistics: any}> {
-    return this.http.get<{statistics: any}>(`${this.apiUrl}/grades/statistics`, {
-      headers: this.getAuthHeaders()
-    });
+  getGradeStatistics(): Observable<{ statistics: any }> {
+    return this.http.get<{ statistics: any }>(
+      `${this.apiUrl}/grades/statistics`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
   }
 }
