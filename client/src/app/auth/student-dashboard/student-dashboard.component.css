@@ -4,7 +4,7 @@
   align-items: center;
   min-height: 100vh;
   background: #f9f9fb;
-  font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
 }
 
 mat-card {
@@ -128,4 +128,75 @@ button[mat-button]:hover {
   font-size: 14px;
   line-height: 1.5;
   margin-top: 0.5rem;
+}
+
+.course-item {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 16px 0 !important;
+  cursor: pointer;
+  height: auto !important;
+  min-height: 64px !important;
+}
+
+.course-info {
+  flex-grow: 1;
+}
+
+.course-name {
+  font-weight: 500;
+  color: #333;
+  font-size: 16px;
+}
+
+.course-teacher {
+  color: #888;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.grade-container {
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+}
+
+.grade-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  transition: transform 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.course-item:hover .grade-circle {
+  transform: scale(1.1);
+}
+
+.grade-circle mat-icon {
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .course-item {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  .grade-container {
+    margin-left: 0;
+    margin-top: 12px;
+    align-self: flex-end;
+  }
 }

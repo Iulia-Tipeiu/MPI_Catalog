@@ -1,0 +1,44 @@
+<div class="create-course-container">
+  <mat-card class="create-course-card">
+    <mat-card-header>
+      <mat-card-title>Create New Course</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <form [formGroup]="courseForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Course Name</mat-label>
+          <input matInput formControlName="course_name">
+          <mat-error *ngIf="hasError('course_name', 'required')">
+            Course name is required
+          </mat-error>
+          <mat-error *ngIf="hasError('course_name', 'maxlength')">
+            Course name cannot exceed 100 characters
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="4"></textarea>
+          <mat-error *ngIf="hasError('description', 'required')">
+            Description is required
+          </mat-error>
+          <mat-error *ngIf="hasError('description', 'maxlength')">
+            Description cannot exceed 500 characters
+          </mat-error>
+        </mat-form-field>
+
+        <div *ngIf="error" class="error-message">
+          {{ error }}
+        </div>
+
+        <div class="form-actions">
+          <button mat-button type="button" (click)="cancel()">Cancel</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="submitting">
+            {{ submitting ? 'Creating...' : 'Create Course' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

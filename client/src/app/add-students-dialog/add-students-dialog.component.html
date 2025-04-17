@@ -1,0 +1,52 @@
+<h2 mat-dialog-title>Add Students to Course</h2>
+
+<div *ngIf="loading" class="loading-spinner">
+  <mat-spinner diameter="40"></mat-spinner>
+  <p>Loading students...</p>
+</div>
+
+<div *ngIf="error" class="error-message">
+  <p>{{ error }}</p>
+  <button mat-button color="primary" (click)="loadUnenrolledStudents()">Try Again</button>
+</div>
+
+<mat-dialog-content *ngIf="!loading && !error">
+  <div class="search-container">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Search students</mat-label>
+      <input matInput [(ngModel)]="searchTerm">
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="students.length === 0" class="empty-state">
+    <p>No unenrolled students available.</p>
+  </div>
+
+  <div *ngIf="students.length > 0" class="students-list">
+    <mat-selection-list #studentList>
+      <mat-list-option *ngFor="let student of filterStudents()" 
+                      [value]="student.id"
+                      (click)="toggleStudentSelection(student.id)"
+                      [selected]="isSelected(student.id)">
+        <div class="student-item">
+          <div>
+            <span class="student-name">{{ student.first_name }} {{ student.last_name }}</span>
+            <span class="student-username">({{ student.username }})</span>
+          </div>
+        </div>
+      </mat-list-option>
+    </mat-selection-list>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <div class="selected-count" *ngIf="selectedStudents.length > 0">
+    {{ selectedStudents.length }} student(s) selected
+  </div>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-raised-button color="primary" 
+          [disabled]="selectedStudents.length === 0 || loading" 
+          (click)="enrollStudents()">
+    Enroll Students
+  </button>
+</mat-dialog-actions>

@@ -94,4 +94,10 @@
     margin-top: 2rem;
     margin-bottom: 1rem;
   }
-  
+
+  .action-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
